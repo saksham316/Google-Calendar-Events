@@ -33,7 +33,7 @@ export const SignIn = () => {
             <img src="/images/authCard2.jpg" />
             <div className="sign-in__card-right-inner-card">
               <h1 className="sign-in__card-right-inner-card-title">
-                Welcome...
+                Event Calendar
               </h1>
               <h3 className="sign-in__card-right-inner-card-sub-title">
                 Seamlessly connect and create your perfect schedule.
