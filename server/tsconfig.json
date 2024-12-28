@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "rootDir": "./src",
+    "outDir": "./build"
+  },
+  "include": ["src/**/*", "src/db/mongoDb"],
+  "exclude": ["node_modules"]
+}
