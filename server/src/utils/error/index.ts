@@ -1,3 +1,4 @@
 import { CustomError } from "./customError";
+import { asyncErrorHandler } from "./asyncErrorHandler";
 
-export { CustomError };
+export { CustomError, asyncErrorHandler };
