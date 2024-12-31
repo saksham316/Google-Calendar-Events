@@ -5,7 +5,7 @@ import { persistor } from "../../../../redux/store";
 
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
-  async (payload, { rejectWithValue }) => {
+  async (payload: { authCode: string }, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.post("/auth/google-login", payload, {
         withCredentials: true,

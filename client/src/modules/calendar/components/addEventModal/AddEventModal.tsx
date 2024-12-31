@@ -71,7 +71,7 @@ const AddEventModal = ({ open, close }: IAddEventModalProps) => {
             <div className="add-event-modal__card-content-label">
               <label htmlFor="name">Name :</label>
               <label htmlFor="start-date">Start Date :</label>
-              <label htmlFor="end-date">Start Date :</label>
+              <label htmlFor="end-date">End Date :</label>
             </div>
             <div className="add-event-modal__card-content-field">
               <div>
