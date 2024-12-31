@@ -1,8 +1,8 @@
 // nodeEnv - node environment
-const nodeEnv = process.env.NODE_ENV === "development" ? "dev" : "prod";
+export const nodeEnv = process.env.NODE_ENV === "development" ? "dev" : "prod";
 // allowedOrigin - whitelisted origins
 const allowedOrigin: string =
-  process.env.NODE_ENV === "development"
+  nodeEnv === "dev"
     ? process.env.REACT_APP_DEV_ALLOWED_ORIGIN
       ? process.env.REACT_APP_DEV_ALLOWED_ORIGIN
       : ""

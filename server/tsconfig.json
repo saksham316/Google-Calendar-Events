@@ -6,7 +6,8 @@
     "strict": true,
     "skipLibCheck": true,
     "rootDir": "./src",
-    "outDir": "./build"
+    "outDir": "./build",
+    "typeRoots": ["./src/@types", "./node_modules/@types"]
   },
   "include": ["src/**/*", "src/db/mongoDb"],
   "exclude": ["node_modules"]

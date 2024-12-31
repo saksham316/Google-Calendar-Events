@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { CustomError } from "./utils/error";
 import { corsConfig } from "./utils";
 import { authRouter } from "./routes/auth/authRoutes";
+import { calendarRouter } from "./routes/calendar/calendarRoutes";
 // -------------------------------------------------------------------
 
 // Routes Imports
@@ -35,6 +36,7 @@ app.all(["/", "/api", "/api/v1"], (req: Request, res: Response) => {
 });
 
 app.use(versionOne("auth"), authRouter); // authRouter
+app.use(versionOne("calendar"), calendarRouter); // calendarRouter
 
 // -------------------------------------------------------------------
 
@@ -45,6 +47,7 @@ app.all("*", (req, res, next) => {
 
 app.use(
   (error: CustomError, req: Request, res: Response, next: NextFunction) => {
+    console.log(error);
     error.statusCode = error.statusCode ?? 500;
     res.status(error.statusCode).json({
       status: error.statusCode,

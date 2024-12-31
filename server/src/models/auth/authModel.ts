@@ -12,6 +12,12 @@ const authSchema = new mongoose.Schema({
   avatar: {
     type: String,
   },
+  g_access_token: {
+    type: String,
+  },
+  g_refresh_token: {
+    type: String,
+  },
 });
 
 export const authModel = mongoose.model("auth", authSchema, "auth");

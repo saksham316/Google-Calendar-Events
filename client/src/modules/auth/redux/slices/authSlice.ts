@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { googleLogin } from "../actions/authAction";
-
+import { toast } from "react-toastify";
+import { persistor } from "../../../../redux/store";
 // initialState
 const initialState = {
   isAuthenticated: false,
@@ -12,7 +13,13 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.userData = {};
+      state.isAuthenticated = false;
+      toast.success("Logged Out Successfully");
+    },
+  },
   extraReducers: (builder) => {
     builder
       // google login lifecycle actions
@@ -20,13 +27,20 @@ const authSlice = createSlice({
         state.isAuthLoading = true;
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
-        state.userData = action.payload;
+        const res = action.payload as IGoogleLoginApiRes;
+        if (res.success && res.data) {
+          state.userData = res.data;
+          state.isAuthenticated = true;
+          toast.success("Logged In Successfully");
+        }
         state.isAuthLoading = false;
       })
       .addCase(googleLogin.rejected, (state, action) => {
         state.isAuthLoading = false;
       });
+    //
   },
 });
 
 export const authSliceReducer = authSlice.reducer;
+export const { logout } = authSlice.actions;

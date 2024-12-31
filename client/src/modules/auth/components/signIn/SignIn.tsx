@@ -27,6 +27,7 @@ export const SignIn = () => {
     onSuccess: googleAuthRes,
     onError: googleAuthRes,
     flow: "auth-code",
+    scope: import.meta.env.VITE_GOOGLE_SCOPES,
   });
 
   return (
@@ -48,7 +49,7 @@ export const SignIn = () => {
               <div className="sign-in__card-right-inner-card-button">
                 <button onClick={googleAuthReq}>
                   <FcGoogle />
-                  Sign In With Google
+                  <p>Sign In With Google</p>
                 </button>
               </div>
             </div>

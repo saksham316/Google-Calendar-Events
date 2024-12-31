@@ -1,6 +1,9 @@
 // -----------Imports------------
-import { SignIn } from "../modules/auth/components";
-import { AuthLayout, NotFound, UnAuthLayout } from "../shared/components";
+import {
+  AuthLayoutWrapper,
+  NotFound,
+  ProtectedRoutesLayout,
+} from "../shared/components";
 
 // ------------------------------
 // ------------------------------
@@ -8,12 +11,12 @@ import { AuthLayout, NotFound, UnAuthLayout } from "../shared/components";
 export const Routes = () => {
   return {
     path: "/",
-    element: <UnAuthLayout />,
+    element: <AuthLayoutWrapper />,
     children: [
       {
         index: true,
-        element: <SignIn />,
         path: "/",
+        element: <ProtectedRoutesLayout />,
       },
       {
         element: <NotFound />,

@@ -1,0 +1,173 @@
+.create-event-card {
+  width: 50%;
+  height: 70%;
+  border: 1px solid black;
+  border-radius: 40px;
+  background-color: white;
+  position: relative;
+  z-index: 4;
+  padding: 10px;
+}
+
+.create-event-card__title {
+  height: 25%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 5px;
+  font-weight: bolder;
+  font-size: medium;
+}
+.create-event-card__sub-title {
+  height: 25%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-event-card__sub-title p {
+  font-size: x-large;
+}
+.create-event-card__add-card {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.create-event-card__add-card button {
+  font-weight: bolder;
+  font-size: x-large;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: rgb(255, 155, 171);
+  color: white;
+  cursor: pointer;
+}
+.create-event-card__add-card button:hover {
+  background-color: rgb(255, 63, 95);
+}
+
+@media only screen and (max-width: 375px) {
+  .create-event-card {
+    width: 90%;
+    height: 50%;
+    border-radius: 20px;
+  }
+  .create-event-card__title {
+    height: 30%;
+    font-size: 10px;
+    text-align: center;
+  }
+  .create-event-card__sub-title {
+    height: 30%;
+    text-align: center;
+  }
+  .create-event-card__sub-title p {
+    font-size: 16px;
+  }
+  .create-event-card__add-card {
+    height: 40%;
+  }
+  .create-event-card__add-card button {
+    font-weight: bolder;
+    font-size: large;
+    padding: 10px;
+    border-radius: 15px;
+  }
+}
+@media only screen and (min-width: 375px) {
+  .create-event-card {
+    width: 90%;
+    height: 50%;
+    border-radius: 30px;
+  }
+  .create-event-card__title {
+    height: 30%;
+    font-size: 14px;
+    text-align: center;
+  }
+  .create-event-card__sub-title {
+    height: 30%;
+    text-align: center;
+  }
+  .create-event-card__sub-title p {
+    font-size: large;
+  }
+  .create-event-card__add-card {
+    height: 40%;
+  }
+  .create-event-card__add-card button {
+    font-weight: bolder;
+    font-size: x-large;
+    padding: 10px;
+    border-radius: 15px;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .create-event-card {
+    height: 60%;
+    width: 70%;
+    border-radius: 40px;
+  }
+  .create-event-card__title {
+    height: 30%;
+    font-size: 16px;
+    text-align: center;
+  }
+  .create-event-card__sub-title {
+    height: 30%;
+    text-align: center;
+  }
+  .create-event-card__sub-title p {
+    font-size: x-large;
+  }
+  .create-event-card__add-card {
+    height: 40%;
+  }
+  .create-event-card__add-card button {
+    font-weight: bolder;
+    font-size: xx-large;
+    padding: 20px;
+    border-radius: 20px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .create-event-card {
+    height: 70%;
+    width: 60%;
+    border-radius: 40px;
+  }
+  .create-event-card__title {
+    height: 30%;
+    font-size: 18px;
+    text-align: center;
+  }
+  .create-event-card__sub-title {
+    height: 30%;
+    text-align: center;
+  }
+  .create-event-card__sub-title p {
+    font-size: 27px;
+  }
+  .create-event-card__add-card {
+    height: 40%;
+  }
+  .create-event-card__add-card button {
+    font-weight: bolder;
+    font-size: xx-large;
+    padding: 20px;
+    border-radius: 20px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .create-event-card {
+    width: 50%;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .create-event-card {
+    width: 35%;
+  }
+}

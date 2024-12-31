@@ -9,11 +9,13 @@ export const axiosInstance = axios.create({
       ? import.meta.env.VITE_APP_DEV_API_URL
       : import.meta.env.VITE_APP_DEV_API_URL
   }`,
+  withCredentials: true,
 });
 
 // request interceptor
 axiosInstance.interceptors.request.use(
   (req) => {
+    //Allowing auth headers and cookie
     return req;
   },
   (error) => {

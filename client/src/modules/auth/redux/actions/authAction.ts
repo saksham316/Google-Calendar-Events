@@ -1,5 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../../../services/axios/axios";
+import { AxiosResponse } from "axios";
+import { persistor } from "../../../../redux/store";
 
 export const googleLogin = createAsyncThunk(
   "auth/googleLogin",
@@ -11,9 +13,15 @@ export const googleLogin = createAsyncThunk(
           "Content-Type": "application/json",
         },
       });
-      return res;
+      return res.data;
     } catch (error) {
       return rejectWithValue(error);
     }
   }
 );
+
+//logout
+
+export const purgeStore = async () => {
+  return await persistor.purge();
+};
