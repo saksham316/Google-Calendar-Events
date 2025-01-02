@@ -25,4 +25,12 @@ mongoose.connection.on("disconnected", () => {
 server.listen(PORT, () => {
   console.log("Server Started at PORT " + PORT);
 });
-// ----------------------------------------
+// --------------Global Error Handling----------------------
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection!", "reason:", reason);
+  process.exit(1);
+});
+process.on("uncaughtException", (err) => {
+  console.log("Uncaught Exception!", err);
+  process.exit(1);
+});

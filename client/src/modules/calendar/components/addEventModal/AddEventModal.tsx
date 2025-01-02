@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
 import { backendDateFormat, formatDate } from "../../../../utils/date";
-import { useAppDispatch } from "../../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import {
   createCalendarEvent,
   fetchCalendarEvents,
@@ -22,6 +22,9 @@ const AddEventModal = ({ open, close }: IAddEventModalProps) => {
 
   //------------------------Hooks----------------------
   const dispatch = useAppDispatch();
+  const { isAddCalendarEventLoading } = useAppSelector(
+    (state) => state.calendarEvent
+  );
   // ---------------------------------------------------
 
   //----------------------Functions----------------------
@@ -76,6 +79,7 @@ const AddEventModal = ({ open, close }: IAddEventModalProps) => {
             <div className="add-event-modal__card-content-field">
               <div>
                 <input
+                  disabled={isAddCalendarEventLoading}
                   type="text"
                   id="name"
                   onChange={(e) => {
@@ -93,6 +97,7 @@ const AddEventModal = ({ open, close }: IAddEventModalProps) => {
                   dateHandler(date, setStartDate);
                 }}
                 dateFormat="MM/dd/yyyy h:mm aa"
+                disabled={isAddCalendarEventLoading}
               />
               <DatePicker
                 className="date-picker"
@@ -104,15 +109,19 @@ const AddEventModal = ({ open, close }: IAddEventModalProps) => {
                   dateHandler(date, setEndDate);
                 }}
                 dateFormat="MM/dd/yyyy h:mm aa"
+                disabled={isAddCalendarEventLoading}
               />
             </div>
           </div>
           <div className="add-event-modal__card-add-btn">
             <button
               onClick={createEvent}
-              disabled={!(startDate && endDate && eventName)}
+              disabled={
+                !(startDate && endDate && eventName) ||
+                isAddCalendarEventLoading
+              }
             >
-              Create
+              {isAddCalendarEventLoading ? "Creating..." : "Create"}
             </button>
           </div>
         </div>

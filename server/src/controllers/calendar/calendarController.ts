@@ -44,7 +44,7 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
       status: 200,
       success: true,
-      message: "Event Fetched Successfully",
+      message: "Event Created Successfully",
     });
     return;
   }
@@ -75,7 +75,7 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     res.status(200).json({
       status: 200,
       success: true,
-      message: "Event Created Successfully",
+      message: "Event Fetched Successfully",
       data: eventRes.data,
     });
     return;
