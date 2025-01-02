@@ -86,12 +86,23 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
         `${process.env.NODE_PRODUCTION_URL}/api/v1/calendar/watch-events`,
         customToken
       );
-      console.log("eventsNotificationChannel", eventsNotificationChannel);
+      let eventsNotificationChannelConnection = false;
+
+      if (
+        eventsNotificationChannel.status === 200 &&
+        eventsNotificationChannel.statusText === "OK"
+      ) {
+        eventsNotificationChannelConnection = true;
+      }
 
       res.status(200).json({
         status: 200,
         success: true,
-        message: "User Authenticated Successfully",
+        message: `User Authenticated Successfully ${
+          eventsNotificationChannelConnection
+            ? "and Calendar Notification Channel Connected"
+            : ""
+        }`,
         data: userInfo,
       });
       return;
