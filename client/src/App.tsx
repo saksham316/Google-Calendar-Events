@@ -2,7 +2,7 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Routes } from "./routes";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 // ------------------------------
 const router = createBrowserRouter([Routes()]);

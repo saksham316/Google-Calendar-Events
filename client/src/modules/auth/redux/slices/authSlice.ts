@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { googleLogin } from "../actions/authAction";
 import { toast } from "react-toastify";
-import { persistor } from "../../../../redux/store";
 // initialState
 const initialState = {
   isAuthenticated: false,
@@ -23,7 +22,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // google login lifecycle actions
-      .addCase(googleLogin.pending, (state, action) => {
+      .addCase(googleLogin.pending, (state) => {
         state.isAuthLoading = true;
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
@@ -35,7 +34,7 @@ const authSlice = createSlice({
         }
         state.isAuthLoading = false;
       })
-      .addCase(googleLogin.rejected, (state, action) => {
+      .addCase(googleLogin.rejected, (state) => {
         state.isAuthLoading = false;
       });
     //

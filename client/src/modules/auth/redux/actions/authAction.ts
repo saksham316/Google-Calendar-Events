@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../../../services/axios/axios";
-import { AxiosResponse } from "axios";
 import { persistor } from "../../../../redux/store";
 
 export const googleLogin = createAsyncThunk(

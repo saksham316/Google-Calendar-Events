@@ -20,7 +20,7 @@ const calendarEventSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // create calendar event lifecycle actions
-      .addCase(createCalendarEvent.pending, (state, action) => {
+      .addCase(createCalendarEvent.pending, (state) => {
         state.isAddCalendarEventLoading = true;
       })
       .addCase(createCalendarEvent.fulfilled, (state, action) => {
@@ -38,7 +38,7 @@ const calendarEventSlice = createSlice({
       })
 
       // fetch calendar events lifecycle actions
-      .addCase(fetchCalendarEvents.pending, (state, action) => {
+      .addCase(fetchCalendarEvents.pending, (state) => {
         state.isFetchCalendarEventLoading = true;
       })
       .addCase(fetchCalendarEvents.fulfilled, (state, action) => {

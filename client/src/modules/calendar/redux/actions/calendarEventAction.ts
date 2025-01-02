@@ -21,7 +21,7 @@ export const createCalendarEvent = createAsyncThunk(
 // fetchCalendarEvents
 export const fetchCalendarEvents = createAsyncThunk(
   "calendarEvent/fetchCalendarEvents",
-  async (payload, { rejectWithValue }) => {
+  async ({}, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get("/calendar/events", {
         withCredentials: true,

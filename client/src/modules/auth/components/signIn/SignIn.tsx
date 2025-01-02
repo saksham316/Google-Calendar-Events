@@ -1,18 +1,22 @@
 // ---------------Imports------------------
-import { useGoogleLogin } from "@react-oauth/google";
+import { CodeResponse, useGoogleLogin } from "@react-oauth/google";
 import "./signIn.css";
 import { FcGoogle } from "react-icons/fc";
-import { useDispatch } from "react-redux";
 import { googleLogin } from "../../redux/actions/authAction";
+import { useAppDispatch } from "../../../../redux/store";
 
 // ----------------------------------------
 
 // ----------------------------------------
 //SignIn
 export const SignIn = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const googleAuthRes = (authRes) => {
+  const googleAuthRes = (
+    authRes:
+      | Omit<CodeResponse, "error" | "error_description" | "error_uri">
+      | Pick<CodeResponse, "error" | "error_description" | "error_uri">
+  ) => {
     try {
       if ("code" in authRes) {
         const { code } = authRes;
