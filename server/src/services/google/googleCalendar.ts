@@ -71,7 +71,6 @@ export const watchEvents = async (
       version: "v3",
       auth: auth,
     });
-    console.log("id passed to the watch", id);
     // registering the notification channel with id as userId
     const response = await calendar.events.watch({
       calendarId: "primary",

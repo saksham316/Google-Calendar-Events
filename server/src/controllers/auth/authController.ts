@@ -6,7 +6,7 @@ import { authModel } from "../../models/auth/authModel";
 import { createJwtToken } from "../../utils/jwt";
 import { saveTokenToCookie } from "../../utils/cookie";
 import { watchEvents } from "../../services/google/googleCalendar";
-import { channelModel } from "../../models/channel/channelModel";
+import { v4 as uuidv4 } from "uuid";
 
 // ----------------------------------------------------
 
@@ -78,13 +78,16 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
 
       // custom token for validating the notification channel request
       const customToken = userId;
-      console.log("userId", userId);
+      // channel id must be unique
+      const uniqueId = uuidv4();
+      console.log("this is the user id", customToken);
+
       // registering the calendar event notification channel
       const eventsNotificationChannel = await watchEvents(
         googleOAuthClient,
         `${process.env.NODE_PRODUCTION_URL}/api/v1/calendar/watch-events`,
         customToken,
-        userId
+        uniqueId
       );
 
       let eventsNotificationChannelConnection = false;
