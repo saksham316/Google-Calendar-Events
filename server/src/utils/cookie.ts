@@ -15,7 +15,7 @@ export const saveTokenToCookie = (res: Response, token: string) => {
   return res.cookie(cookieName, token, {
     httpOnly: true,
     expires: cookieValidity(),
-    ...(nodeEnv === "dev"
+    ...(nodeEnv === "prod"
       ? { sameSite: "lax" }
       : { sameSite: "none", secure: true }),
   });
