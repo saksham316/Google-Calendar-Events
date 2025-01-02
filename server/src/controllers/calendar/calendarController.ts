@@ -57,10 +57,7 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
-    const data = await calendarModel
-      .find({ _id: user.userId.toString() })
-      .sort({ createdAt: -1 })
-      .limit(3);
+    const data = await calendarModel.find({ user: user.userId }).limit(3);
     res.status(200).json({
       status: 200,
       success: true,
@@ -103,21 +100,22 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
       const eventRes = await fetchEvents(googleOAuthClient);
 
       if (eventRes.status === 200 && eventRes.statusText === "OK") {
-        // if (eventRes.data && eventRes.data.items) {
-        //   let data = eventRes.data.items.map((item) => {
-        //     return {
-        //       eventName: item.summary,
-        //       startDate: item.start?.date,
-        //       endDate: item.end?.date,
-        //       createdAt: item.created,
-        //       user: customToken,
-        //     };
-        //   });
-        //   if (data && data.length) {
-        //     console.log("data", data);
-        //     await calendarModel.insertMany(data);
-        //   }
-        // }
+        if (eventRes.data && eventRes.data.items) {
+          let data = eventRes.data.items.map((item) => {
+            return {
+              eventName: item.summary,
+              startDate: item.start?.date,
+              endDate: item.end?.date,
+              createdAt: item.created,
+              user: customToken,
+            };
+          });
+          console.log("data is here saksham", data);
+          if (data && data.length) {
+            console.log("data", data);
+            await calendarModel.insertMany(data);
+          }
+        }
 
         res.status(200).json({
           status: 200,
