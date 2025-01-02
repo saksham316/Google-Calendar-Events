@@ -31,9 +31,9 @@ const EventCalendar = () => {
               const data = calendarEvents.map((item) => {
                 return [
                   item.summary,
-                  dateDisplayFormat(item.created),
-                  dateDisplayFormat(item.start.dateTime),
-                  dateDisplayFormat(item.end.dateTime),
+                  dateDisplayFormat(item.createdAt),
+                  dateDisplayFormat(item.startDate),
+                  dateDisplayFormat(item.endDate),
                 ];
               });
               return data;

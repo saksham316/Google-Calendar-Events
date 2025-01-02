@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { authModel } from "../auth/authModel";
 
 const calendarSchema = new mongoose.Schema({
   eventName: {
@@ -13,6 +14,17 @@ const calendarSchema = new mongoose.Schema({
     type: String,
     required: [true, "End Time is a required field"],
   },
+  createdAt: {
+    type: String,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: authModel,
+  },
 });
 
-export const authModel = mongoose.model("calendar", calendarSchema, "calendar");
+export const calendarModel = mongoose.model(
+  "calendar",
+  calendarSchema,
+  "calendar"
+);

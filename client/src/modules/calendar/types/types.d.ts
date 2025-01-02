@@ -9,13 +9,9 @@ declare global {
   }
   interface ICalendarEvents {
     summary: string;
-    created: string;
-    start: {
-      dateTime: string;
-    };
-    end: {
-      dateTime: string;
-    };
+    createdAt: string;
+    startDate: string;
+    endDate: string;
   }
 
   interface ICalendarEventInitialState {
