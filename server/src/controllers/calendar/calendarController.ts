@@ -86,7 +86,6 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     return;
   } else {
     const user = channelId;
-    console.log("this is the channel id here and there", channelId, resourceId, customToken);
     if (user) {
       const userData = await authModel.findById(user.toString());
       if (userData && Object.keys(userData)) {
@@ -100,7 +99,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
       }
       //
       const eventRes = await fetchEvents(googleOAuthClient);
-      console.log("eventRes calendar", eventRes);
+
       if (eventRes.status === 200 && eventRes.statusText === "OK") {
         if (eventRes.data && eventRes.data.items) {
           let data = eventRes.data.items.map((item) => {
@@ -109,7 +108,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
               startDate: item.start?.date,
               endDate: item.end?.date,
               createdAt: item.created,
-              user: channelId.toString(),
+              user: customToken,
             };
           });
           if (data && data.length) {
