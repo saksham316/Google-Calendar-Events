@@ -57,6 +57,7 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
+    console.log("this is me saksham", user);
     const data = await calendarModel.find({ user: user.userId }).limit(3);
     res.status(200).json({
       status: 200,
