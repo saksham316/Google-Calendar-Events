@@ -81,6 +81,8 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   const resourceId = req.headers["x-goog-resource-id"];
   const channelId = req.headers["x-goog-channel-id"];
 
+  console.log("custom token", customToken);
+
   if (!customToken && !resourceId && !channelId) {
     next(new CustomError("Unauthorized request", 401));
     return;
