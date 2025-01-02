@@ -11,6 +11,7 @@ export const verifyToken = asyncErrorHandler((req, res, next) => {
 
   // accessing the token
   let token = cookie?.[cookieName];
+  console.log("calendar token,", token);
 
   // vrifiying the token
   if (process.env.JWT_SECRET) {
