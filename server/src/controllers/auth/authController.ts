@@ -57,7 +57,7 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
         const user = await authUser.save();
         userId = user._id.toString();
       } else {
-        await authModel.findOne(
+        await authModel.findOneAndUpdate(
           { email: userInfo.email },
           {
             $set: {

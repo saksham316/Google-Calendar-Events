@@ -7,7 +7,7 @@ export const axiosInstance = axios.create({
   baseURL: `${
     import.meta.env.VITE_APP_ENV === "development"
       ? import.meta.env.VITE_APP_DEV_API_URL
-      : import.meta.env.VITE_APP_DEV_API_URL
+      : import.meta.env.VITE_APP_PRODUCTION_API_URL
   }`,
   withCredentials: true,
 });
