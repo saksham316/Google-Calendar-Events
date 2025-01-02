@@ -5,6 +5,7 @@ import { asyncErrorHandler, CustomError } from "../../utils/error";
 import { authModel } from "../../models/auth/authModel";
 import { createJwtToken } from "../../utils/jwt";
 import { saveTokenToCookie } from "../../utils/cookie";
+import { watchEvents } from "../../services/google/googleCalendar";
 
 // ----------------------------------------------------
 
@@ -56,6 +57,15 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
         const user = await authUser.save();
         userId = user._id.toString();
       } else {
+        await authModel.findOne(
+          { email: userInfo.email },
+          {
+            $set: {
+              g_access_token: tokens.access_token,
+              g_refresh_token: tokens.refresh_token,
+            },
+          }
+        );
         userId = user._id.toString();
       }
 
@@ -64,6 +74,19 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
 
       // saving the token to cookie
       saveTokenToCookie(res, jwtToken);
+
+      // custom token for validating the notification channel request
+      const customToken = process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN
+        ? process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN
+        : "";
+
+      // registering the calendar event notification channel
+      const eventsNotificationChannel = await watchEvents(
+        googleOAuthClient,
+        `${process.env.NODE_PRODUCTION_URL}/api/v1/calendar/watch-events`,
+        customToken
+      );
+      console.log("eventsNotificationChannel", eventsNotificationChannel);
 
       res.status(200).json({
         status: 200,

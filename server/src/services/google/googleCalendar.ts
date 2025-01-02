@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { googleOAuthClient } from "../../config/google/googleConfig";
+import { v4 as uuidv4 } from "uuid";
 
 // createEvent - service to create the event in the google calendar
 export const createEvent = async (
@@ -51,6 +52,35 @@ export const fetchEvents = async (auth: typeof googleOAuthClient) => {
       maxResults: 10,
       timeMin: new Date().toISOString(),
       auth,
+    });
+    return response;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+// watchEvents - service to register the notification channel
+export const watchEvents = async (
+  auth: typeof googleOAuthClient,
+  webHookUrl: string,
+  customToken: string
+) => {
+  try {
+    // calendar - authenticating google calendar and getting the google calendar object
+    const calendar = google.calendar({
+      version: "v3",
+      auth: auth,
+    });
+
+    // registering the notification channel with unique id using uuid
+    const response = await calendar.events.watch({
+      calendarId: "primary",
+      requestBody: {
+        id: uuidv4(),
+        type: "web_hook",
+        address: webHookUrl,
+        ...(customToken && { token: customToken }),
+      },
     });
     return response;
   } catch (error) {

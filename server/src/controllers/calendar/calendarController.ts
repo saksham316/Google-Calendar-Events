@@ -81,3 +81,17 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     return;
   }
 });
+
+// @desc - watching the calendar events
+// @method - POST
+// @url - /calendar/watch-events
+export const watchCalendarEvents = asyncErrorHandler((req, res, next) => {
+  const customToken = req.headers["x-goog-channel-token"];
+  console.log("customToken", customToken);
+  if (!customToken) {
+    next(new CustomError("Unauthorized request", 401));
+    return;
+  }
+
+  console.log("res", res);
+});
