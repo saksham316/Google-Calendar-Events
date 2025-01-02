@@ -79,15 +79,13 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   const resourceId = req.headers["x-goog-resource-id"];
   const channelId = req.headers["x-goog-channel-id"];
 
-  console.log("custom token", customToken);
-
   if (!customToken && !resourceId && !channelId) {
     next(new CustomError("Unauthorized request", 401));
     return;
   } else {
-    const user = channelId;
+    const user = customToken;
     if (user) {
-      const userData = await authModel.findById(user.toString());
+      const userData = await authModel.findById(user);
       if (userData && Object.keys(userData)) {
         googleOAuthClient.setCredentials({
           access_token: userData.g_access_token,
