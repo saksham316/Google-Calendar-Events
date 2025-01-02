@@ -86,6 +86,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     return;
   } else {
     const user = channelId;
+    console.log("this is the channel id", channelId, resourceId, customToken);
     if (user) {
       const userData = await authModel.findById(user.toString());
       if (userData && Object.keys(userData)) {
