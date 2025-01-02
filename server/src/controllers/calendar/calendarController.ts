@@ -99,6 +99,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
       }
       //
       const eventRes = await fetchEvents(googleOAuthClient);
+      console.log("eventRes calendar", eventRes);
       if (eventRes.status === 200 && eventRes.statusText === "OK") {
         if (eventRes.data && eventRes.data.items) {
           let data = eventRes.data.items.map((item) => {
