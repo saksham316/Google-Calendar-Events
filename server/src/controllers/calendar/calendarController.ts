@@ -64,10 +64,8 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
     console.log("jwt payload fetch calendar", req.user);
-    const userData = await calendarModel.findOne({ user: user.userId });
-    console.log("channel data", channel);
 
-    if (userData && Object.keys(userData).length) {
+    if (user && user.userId) {
       const data = await calendarModel.find({ user: user.userId }).limit(3);
       if (data && data.length) {
         res.status(200).json({
