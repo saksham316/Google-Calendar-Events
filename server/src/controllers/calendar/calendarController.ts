@@ -118,7 +118,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
               });
           });
           if (data && data.length) {
-            console.log("data", data);
+            console.log("data of hero", data);
             await calendarModel.insertMany(data);
           }
         }

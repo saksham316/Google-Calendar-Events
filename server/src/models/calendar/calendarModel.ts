@@ -6,11 +6,11 @@ const calendarSchema = new mongoose.Schema({
     type: String,
     required: [true, "Event Name is a required field"],
   },
-  startTime: {
+  startDate: {
     type: String,
     required: [true, "Start Time is a required field"],
   },
-  endTime: {
+  endDate: {
     type: String,
     required: [true, "End Time is a required field"],
   },
