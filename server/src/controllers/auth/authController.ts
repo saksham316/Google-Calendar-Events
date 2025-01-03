@@ -7,7 +7,6 @@ import { createJwtToken } from "../../utils/jwt";
 import { saveTokenToCookie } from "../../utils/cookie";
 import { watchEvents } from "../../services/google/googleCalendar";
 import { v4 as uuidv4 } from "uuid";
-import { channelModel } from "../../models/channel/channelModel";
 
 // ----------------------------------------------------
 
@@ -101,19 +100,6 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
         eventsNotificationChannel.statusText === "OK"
       ) {
         eventsNotificationChannelConnection = true;
-        const channelUser = await channelModel.findOne({ user: userId });
-        if (!channelUser) {
-          const channelData = new channelModel({
-            channelId: uniqueId,
-            user: userId,
-          });
-          await channelData.save();
-        } else {
-          await channelModel.findOneAndUpdate(
-            { user: userId },
-            { $set: { channelId: uniqueId } }
-          );
-        }
       }
 
       res.status(200).json({

@@ -6,10 +6,6 @@ import { googleOAuthClient } from "../../config/google/googleConfig";
 import { authModel } from "../../models/auth/authModel";
 import { fetchEvents } from "../../services/google/googleCalendar";
 import { calendarModel } from "../../models/calendar/calendarModel";
-import mongoose from "mongoose";
-import { channel } from "diagnostics_channel";
-import { channelModel } from "../../models/channel/channelModel";
-import { verifyJwtToken } from "../../utils/jwt";
 
 // ----------------------------------------------------
 
