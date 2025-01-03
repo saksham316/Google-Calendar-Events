@@ -66,13 +66,6 @@ export const watchEvents = async (
   id: string
 ) => {
   try {
-    console.log(
-      "inside watch events",
-      "customToken",
-      customToken,
-      "uniqueId",
-      id
-    );
     // calendar - authenticating google calendar and getting the google calendar object
     const calendar = google.calendar({
       version: "v3",

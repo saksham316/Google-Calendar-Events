@@ -11,7 +11,6 @@ export const verifyGoogleToken = asyncErrorHandler((req, res, next) => {
     next(new CustomError("Unauthorized request", 401));
     return;
   } else {
-    console.log("enterd hte google token verify", channelToken);
     // verifiying the token
     if (process.env.GOOGLE_NOTIFICATION_CHANNEL_SECRET) {
       if (
@@ -32,7 +31,6 @@ export const verifyGoogleToken = asyncErrorHandler((req, res, next) => {
               if (payload) {
                 req.user = payload;
               }
-              console.log("this is verufy google payload", payload);
               next();
             }
           }

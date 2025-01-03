@@ -17,7 +17,6 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 
   if (req.user) {
     const user = req.user as IJwtPayload;
-    console.log("jwt payload create", user);
 
     const userData = await authModel.findById(user.userId);
 
@@ -59,7 +58,6 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
-    console.log("jwt payload fetch calendar", req.user);
 
     if (user && user.userId) {
       const data = await calendarModel
@@ -97,8 +95,6 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
     const userData = await authModel.findById(user.userId);
-    console.log("this is userdata watch calendar", user);
-    console.log("this is userdata", userData);
     if (userData && Object.keys(userData)) {
       googleOAuthClient.setCredentials({
         access_token: userData.g_access_token,
@@ -110,7 +106,6 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     }
     //
     const eventRes = await fetchEvents(googleOAuthClient);
-    console.log("eventRes", eventRes.data.items);
     if (eventRes.status === 200 && eventRes.statusText === "OK") {
       if (eventRes.data && eventRes.data.items) {
         let data: Array<ICalendarCreationData> = [];
