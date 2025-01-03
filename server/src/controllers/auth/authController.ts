@@ -78,10 +78,13 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
       saveTokenToCookie(res, jwtToken);
 
       // custom token for validating the notification channel request
-      const customToken = userId;
+      const customToken = createJwtToken(
+        { userId },
+        process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN,
+        "30d"
+      );
       // channel id must be unique
       const uniqueId = uuidv4();
-      console.log("this is the user id", customToken);
 
       // registering the calendar event notification channel
       const eventsNotificationChannel = await watchEvents(

@@ -9,6 +9,7 @@ import { calendarModel } from "../../models/calendar/calendarModel";
 import mongoose from "mongoose";
 import { channel } from "diagnostics_channel";
 import { channelModel } from "../../models/channel/channelModel";
+import { verifyJwtToken } from "../../utils/jwt";
 
 // ----------------------------------------------------
 
@@ -104,7 +105,19 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     next(new CustomError("Unauthorized request", 401));
     return;
   } else {
-    const user = new mongoose.Types.ObjectId(String(customToken));
+    let user = "";
+    if (customToken && process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN) {
+      const payload = verifyJwtToken(
+        String(customToken),
+        process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN
+      );
+      if (payload) {
+        user = payload.userId;
+      }
+    } else {
+      next(new CustomError("Invalid Token", 403));
+      return;
+    }
     if (user) {
       const userData = await authModel.findById(user);
       console.log("this is userdata", user);
