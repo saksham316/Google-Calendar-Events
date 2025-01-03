@@ -74,8 +74,8 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
           data,
         });
       } else {
-        res.status(404).json({
-          status: 404,
+        res.status(200).json({
+          status: 200,
           success: true,
           message: "No Event Data Found",
           data: [],
