@@ -48,7 +48,7 @@ const AddEventModal = ({ open, close }: IAddEventModalProps) => {
         const resData = await dispatch(createCalendarEvent(payload));
         const res = resData.payload as ICreateCalendarEventApiRes;
         if (res.status === 200 && res.success === true) {
-          dispatch(fetchCalendarEvents());
+          dispatch(fetchCalendarEvents({ query: "sync=1" }));
         }
         close();
       }

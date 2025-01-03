@@ -7,6 +7,7 @@ import { createJwtToken } from "../../utils/jwt";
 import { saveTokenToCookie } from "../../utils/cookie";
 import { watchEvents } from "../../services/google/googleCalendar";
 import { v4 as uuidv4 } from "uuid";
+import { backendDateFormat, formatDate } from "../../utils/date";
 
 // ----------------------------------------------------
 
@@ -48,6 +49,8 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
         avatar: picture,
         g_refresh_token: tokens.refresh_token,
         g_access_token: tokens.access_token,
+        lastUpdatedTime: backendDateFormat(formatDate(new Date())),
+        presentUpdatedTime: backendDateFormat(formatDate(new Date())),
       };
 
       const user = await authModel.findOne({ email: userInfo.email });

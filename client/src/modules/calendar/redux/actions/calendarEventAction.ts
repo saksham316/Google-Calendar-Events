@@ -19,20 +19,23 @@ export const createCalendarEvent = createAsyncThunk(
 );
 
 // fetchCalendarEvents
-export const fetchCalendarEvents = createAsyncThunk(
-  "calendarEvent/fetchCalendarEvents",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const res = await axiosInstance.get("/calendar/events", {
+export const fetchCalendarEvents = createAsyncThunk<
+  IFetchCalendarEventApiRes,
+  { query?: string }
+>("calendarEvent/fetchCalendarEvents", async (payload, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.get(
+      `/calendar/events${payload && payload.query ? `?${payload.query}` : ""}`,
+      {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
         },
         params: payload,
-      });
-      return res.data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
+      }
+    );
+    return res.data;
+  } catch (error) {
+    return rejectWithValue(error);
   }
-);
+});

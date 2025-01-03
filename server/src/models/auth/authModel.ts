@@ -18,6 +18,12 @@ const authSchema = new mongoose.Schema({
   g_refresh_token: {
     type: String,
   },
+  lastUpdatedTime: {
+    type: String,
+  },
+  presentUpdatedTime: {
+    type: String,
+  },
 });
 
 export const authModel = mongoose.model("auth", authSchema, "auth");

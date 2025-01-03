@@ -6,6 +6,8 @@ import { googleOAuthClient } from "../../config/google/googleConfig";
 import { authModel } from "../../models/auth/authModel";
 import { fetchEvents } from "../../services/google/googleCalendar";
 import { calendarModel } from "../../models/calendar/calendarModel";
+import { backendDateFormat, formatDate } from "../../utils/date";
+import moment from "moment";
 
 // ----------------------------------------------------
 
@@ -60,31 +62,92 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     const user = req.user as IJwtPayload;
 
     if (user && user.userId) {
-      const data = await calendarModel
-        .find({ user: user.userId })
-        .sort({ createdAt: -1 })
-        .limit(3);
-      if (data && data.length) {
-        res.status(200).json({
-          status: 200,
-          success: true,
-          message: "Events Data Fetched Successfully",
-          data,
+      const userData = await authModel.findById(user.userId);
+      if (userData && Object.keys(userData)) {
+        // sync - using it for quick fetching
+        const sync =
+          req.query && req.query.sync && Number(req.query.sync) === 1;
+        console.log("req.query", req.query);
+        // setting the access and refresh token
+        googleOAuthClient.setCredentials({
+          access_token: userData.g_access_token,
+          refresh_token: userData.g_refresh_token,
         });
+
+        // checking whether there is any update in events or not
+        if (
+          sync ||
+          moment(userData.presentUpdatedTime).isAfter(
+            moment(userData.lastUpdatedTime)
+          )
+        ) {
+          // updating the present and last time
+          await authModel.findByIdAndUpdate(user.userId, {
+            $set: {
+              presentUpdatedTime: backendDateFormat(formatDate(new Date())),
+              lastUpdatedTime: backendDateFormat(formatDate(new Date())),
+            },
+          });
+
+          const eventRes = await fetchEvents(googleOAuthClient);
+          if (eventRes.status === 200 && eventRes.statusText === "OK") {
+            if (eventRes.data && eventRes.data.items) {
+              let data: Array<ICalendarCreationData> = [];
+              eventRes.data.items.forEach((item) => {
+                if (
+                  item.summary &&
+                  item.start?.dateTime &&
+                  item.end?.dateTime &&
+                  item.created
+                )
+                  data.push({
+                    eventName: item.summary,
+                    startDate: item.start?.dateTime,
+                    endDate: item.end?.dateTime,
+                    createdAt: item.created,
+                    user: user.userId,
+                  });
+              });
+
+              res.status(200).json({
+                statusCode: 200,
+                success: true,
+                message: "Event Data Fetched Successfully",
+                data,
+              });
+              return;
+            } else {
+              res.status(404).json({
+                statusCode: 404,
+                success: true,
+                data: [],
+                message: "No Data Found",
+              });
+              return;
+            }
+          } else {
+            res.status(404).json({
+              statusCode: 404,
+              success: true,
+              data: [],
+              message: "No Data Found",
+            });
+            return;
+          }
+        } else {
+          res.status(304).json({
+            statusCode: 304,
+            success: true,
+            message: "Data is in sync",
+          });
+          return;
+        }
       } else {
-        res.status(200).json({
-          status: 200,
-          success: true,
-          message: "No Event Data Found",
-          data: [],
-        });
-        return;
+        next(new CustomError("Invalid User", 401));
       }
     } else {
       next(new CustomError("Invalid User", 401));
     }
-  } else {
-    next(new CustomError("Invalid User", 401));
   }
 });
 
@@ -96,50 +159,20 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     const user = req.user as IJwtPayload;
     const userData = await authModel.findById(user.userId);
     if (userData && Object.keys(userData)) {
-      googleOAuthClient.setCredentials({
-        access_token: userData.g_access_token,
-        refresh_token: userData.g_refresh_token,
+      // updating the db about the notification sent from notification channel
+      await authModel.findByIdAndUpdate(user.userId, {
+        $set: { presentUpdatedTime: backendDateFormat(formatDate(new Date())) },
       });
     } else {
       next(new CustomError("Unauthorized User", 401));
       return;
     }
-    //
-    const eventRes = await fetchEvents(googleOAuthClient);
-    if (eventRes.status === 200 && eventRes.statusText === "OK") {
-      if (eventRes.data && eventRes.data.items) {
-        let data: Array<ICalendarCreationData> = [];
-        eventRes.data.items.forEach((item) => {
-          if (
-            item.summary &&
-            item.start?.dateTime &&
-            item.end?.dateTime &&
-            item.created
-          )
-            data.push({
-              eventName: item.summary,
-              startDate: item.start?.dateTime,
-              endDate: item.end?.dateTime,
-              createdAt: item.created,
-              user: user.userId,
-            });
-        });
-        if (data && data.length) {
-          try {
-            await calendarModel.deleteMany({});
-            await calendarModel.insertMany(data);
-          } catch (error) {
-            console.log("Error! Transaction Failed to Insert Calendar Events");
-          }
-        }
-      }
 
-      res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Events Fetched Successfully",
-      });
-      return;
-    }
+    res.status(200).json({
+      status: 200,
+      success: true,
+      message: "Events Watched Successfully",
+    });
+    return;
   }
 });
