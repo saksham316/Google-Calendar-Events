@@ -32,7 +32,6 @@ export const fetchCalendarEvents = createAsyncThunk<
         headers: {
           "Content-Type": "application/json",
         },
-        params: payload,
       }
     );
     return res.data;

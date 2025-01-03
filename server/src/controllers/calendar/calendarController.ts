@@ -80,57 +80,48 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
           )
         );
         // checking whether there is any update in events or not
-        if (
-          sync ||
-          moment(userData.presentUpdatedTime).isAfter(
-            moment(userData.lastUpdatedTime)
-          )
-        ) {
-          // updating the present and last time
-          await authModel.findByIdAndUpdate(user.userId, {
-            $set: {
-              presentUpdatedTime: backendDateFormat(formatDate(new Date())),
-              lastUpdatedTime: backendDateFormat(formatDate(new Date())),
-            },
-          });
+        // if (
+        //   sync ||
+        //   moment(userData.presentUpdatedTime).isAfter(
+        //     moment(userData.lastUpdatedTime)
+        //   )
+        // ) {
+        // updating the present and last time
+        await authModel.findByIdAndUpdate(user.userId, {
+          $set: {
+            presentUpdatedTime: backendDateFormat(formatDate(new Date())),
+            lastUpdatedTime: backendDateFormat(formatDate(new Date())),
+          },
+        });
 
-          const eventRes = await fetchEvents(googleOAuthClient);
-          console.log("eventRes", eventRes.data);
-          if (eventRes.status === 200 && eventRes.statusText === "OK") {
-            if (eventRes.data && eventRes.data.items) {
-              let data: Array<ICalendarCreationData> = [];
-              eventRes.data.items.forEach((item) => {
-                if (
-                  item.summary &&
-                  item.start?.dateTime &&
-                  item.end?.dateTime &&
-                  item.created
-                )
-                  data.push({
-                    eventName: item.summary,
-                    startDate: item.start?.dateTime,
-                    endDate: item.end?.dateTime,
-                    createdAt: item.created,
-                    user: user.userId,
-                  });
-              });
+        const eventRes = await fetchEvents(googleOAuthClient);
+        console.log("eventRes", eventRes.data);
+        if (eventRes.status === 200 && eventRes.statusText === "OK") {
+          if (eventRes.data && eventRes.data.items) {
+            let data: Array<ICalendarCreationData> = [];
+            eventRes.data.items.forEach((item) => {
+              if (
+                item.summary &&
+                item.start?.dateTime &&
+                item.end?.dateTime &&
+                item.created
+              )
+                data.push({
+                  eventName: item.summary,
+                  startDate: item.start?.dateTime,
+                  endDate: item.end?.dateTime,
+                  createdAt: item.created,
+                  user: user.userId,
+                });
+            });
 
-              res.status(200).json({
-                statusCode: 200,
-                success: true,
-                message: "Event Data Fetched Successfully",
-                data,
-              });
-              return;
-            } else {
-              res.status(404).json({
-                statusCode: 404,
-                success: true,
-                data: [],
-                message: "No Data Found",
-              });
-              return;
-            }
+            res.status(200).json({
+              statusCode: 200,
+              success: true,
+              message: "Event Data Fetched Successfully",
+              data,
+            });
+            return;
           } else {
             res.status(404).json({
               statusCode: 404,
@@ -141,13 +132,22 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
             return;
           }
         } else {
-          res.status(304).json({
-            statusCode: 304,
+          res.status(404).json({
+            statusCode: 404,
             success: true,
-            message: "Data is in sync",
+            data: [],
+            message: "No Data Found",
           });
           return;
         }
+        // } else {
+        //   res.status(304).json({
+        //     statusCode: 304,
+        //     success: true,
+        //     message: "Data is in sync",
+        //   });
+        //   return;
+        // }
       } else {
         next(new CustomError("Invalid User", 401));
       }
