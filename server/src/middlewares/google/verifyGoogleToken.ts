@@ -7,8 +7,8 @@ export const verifyGoogleToken = asyncErrorHandler((req, res, next) => {
   const channelId = req.headers["x-goog-channel-id"];
 
   // checking the tokens sent to us from incoming google req
-  if (!channelToken && !resourceId && !channelId) {
-    next(new CustomError("Unauthorized request", 401));
+  if (!channelToken) {
+    next(new CustomError("Channel Token Not Provided", 403));
     return;
   } else {
     // verifiying the token
@@ -26,7 +26,7 @@ export const verifyGoogleToken = asyncErrorHandler((req, res, next) => {
             payload: JwtPayload | undefined | string
           ) => {
             if (error) {
-              next(new CustomError("Unauthorized User", 401));
+              next(new CustomError("Invalid Channel Token", 403));
             } else {
               if (payload) {
                 req.user = payload;
@@ -36,7 +36,7 @@ export const verifyGoogleToken = asyncErrorHandler((req, res, next) => {
           }
         );
       } else {
-        next(new CustomError("Unauthorized User", 401));
+        next(new CustomError("Invalid Channel Token Type", 401));
       }
     } else {
       next(new CustomError("Internal Server Error", 500));

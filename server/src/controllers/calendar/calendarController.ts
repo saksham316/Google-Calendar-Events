@@ -164,7 +164,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
         $set: { presentUpdatedTime: backendDateFormat(formatDate(new Date())) },
       });
     } else {
-      next(new CustomError("Unauthorized User", 401));
+      next(new CustomError("Can't Find User in DB", 404));
       return;
     }
 
