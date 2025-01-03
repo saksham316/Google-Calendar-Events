@@ -104,7 +104,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     next(new CustomError("Unauthorized request", 401));
     return;
   } else {
-    const user = String(customToken);
+    const user = customToken;
     if (user) {
       const userData = await authModel.findById(user);
       if (userData && Object.keys(userData)) {
