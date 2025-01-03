@@ -62,7 +62,10 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     console.log("jwt payload fetch calendar", req.user);
 
     if (user && user.userId) {
-      const data = await calendarModel.find({ user: user.userId }).limit(3);
+      const data = await calendarModel
+        .find({ user: user.userId })
+        .sort({ createdAt: -1 })
+        .limit(3);
       if (data && data.length) {
         res.status(200).json({
           status: 200,
