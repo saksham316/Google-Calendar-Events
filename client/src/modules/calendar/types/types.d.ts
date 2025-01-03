@@ -8,7 +8,7 @@ declare global {
     setOpenEventModal: React.Dispatch<React.SetStateAction<boolean>>;
   }
   interface ICalendarEvents {
-    summary: string;
+    eventName: string;
     createdAt: string;
     startDate: string;
     endDate: string;

@@ -30,7 +30,7 @@ const EventCalendar = () => {
             rowData={() => {
               const data = calendarEvents.map((item) => {
                 return [
-                  item.summary,
+                  item.eventName,
                   dateDisplayFormat(item.createdAt),
                   dateDisplayFormat(item.startDate),
                   dateDisplayFormat(item.endDate),
