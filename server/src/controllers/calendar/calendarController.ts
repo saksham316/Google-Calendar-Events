@@ -20,7 +20,9 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 
   if (req.user) {
     const user = req.user as IJwtPayload;
-    const userData = await authModel.findById(user.userId.toString());
+    console.log("jwt payload create", user);
+
+    const userData = await authModel.findById(user.userId);
 
     if (userData && Object.keys(userData)) {
       googleOAuthClient.setCredentials({
@@ -60,7 +62,9 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
+    console.log("jwt payload", req.user);
     const channel = await channelModel.findOne({ user: user.userId });
+    console.log("channel data", channel);
 
     if (channel) {
       const data = await calendarModel
