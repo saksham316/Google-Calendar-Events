@@ -47,10 +47,11 @@ app.all("*", (req, res, next) => {
 
 app.use(
   (error: CustomError, req: Request, res: Response, next: NextFunction) => {
-    console.log(error);
+    console.log(error.message, error.stack);
     error.statusCode = error.statusCode ?? 500;
     res.status(error.statusCode).json({
-      status: error.statusCode,
+      statusCode: error.statusCode,
+      status: error.status,
       success: false,
       message: error.message,
     });
