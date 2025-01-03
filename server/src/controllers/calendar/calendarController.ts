@@ -107,6 +107,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     const user = new mongoose.Types.ObjectId(String(customToken));
     if (user) {
       const userData = await authModel.findById(user);
+      console.log("this is userdata", userData);
       if (userData && Object.keys(userData)) {
         googleOAuthClient.setCredentials({
           access_token: userData.g_access_token,
