@@ -51,7 +51,6 @@ export const fetchEvents = async (auth: typeof googleOAuthClient) => {
       maxResults: 3,
       timeMin: new Date().toISOString(),
       auth,
-      orderBy: "created",
     });
     return response;
   } catch (error) {
