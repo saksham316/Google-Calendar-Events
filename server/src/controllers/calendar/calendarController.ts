@@ -57,8 +57,10 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
-    console.log("this is me saksham", user);
-    const data = await calendarModel.find({ user: user.userId }).limit(3);
+    const data = await calendarModel
+      .find({ user: user.userId })
+      .sort({ user: -1 })
+      .limit(3);
     res.status(200).json({
       status: 200,
       success: true,
@@ -86,7 +88,6 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     const user = customToken;
     if (user) {
       const userData = await authModel.findById(user);
-      console.log("userData", userData);
       if (userData && Object.keys(userData)) {
         googleOAuthClient.setCredentials({
           access_token: userData.g_access_token,
@@ -101,21 +102,14 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
       if (eventRes.status === 200 && eventRes.statusText === "OK") {
         if (eventRes.data && eventRes.data.items) {
           let data = eventRes.data.items.map((item) => {
-            console.log(
-              "this is the calendar item",
-              item,
-              "item.start",
-              item.start
-            );
             return {
               eventName: item.summary,
-              startDate: item.start?.date,
-              endDate: item.end?.date,
+              startDate: item.start?.dateTime,
+              endDate: item.end?.dateTime,
               createdAt: item.created,
               user: customToken,
             };
           });
-          console.log("data is here saksham", data);
           if (data && data.length) {
             console.log("data", data);
             await calendarModel.insertMany(data);
