@@ -59,7 +59,7 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     const user = req.user as IJwtPayload;
     const data = await calendarModel
       .find({ user: user.userId })
-      .sort({ user: -1 })
+      .sort({ createdAt: -1 })
       .limit(3);
     res.status(200).json({
       status: 200,
@@ -118,7 +118,6 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
               });
           });
           if (data && data.length) {
-            console.log("data of hero", data);
             await calendarModel.insertMany(data);
           }
         }
