@@ -29,9 +29,7 @@ declare global {
 
   interface ICreateCalendarEventApiRes extends Omit<IDefaultAPIRes, "data"> {}
   interface IFetchCalendarEventApiRes extends Omit<IDefaultAPIRes, "data"> {
-    data: {
-      items: [];
-    };
+    data: [];
   }
 }
 export {};

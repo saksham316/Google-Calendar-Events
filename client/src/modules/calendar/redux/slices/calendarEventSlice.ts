@@ -44,7 +44,7 @@ const calendarEventSlice = createSlice({
       .addCase(fetchCalendarEvents.fulfilled, (state, action) => {
         const res = action.payload as IFetchCalendarEventApiRes;
         if (res.success && res.data) {
-          state.calendarEvents = res.data.items;
+          state.calendarEvents = res.data;
         }
         state.isFetchCalendarEventLoading = false;
       })
