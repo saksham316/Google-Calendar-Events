@@ -7,6 +7,8 @@ import { authModel } from "../../models/auth/authModel";
 import { fetchEvents } from "../../services/google/googleCalendar";
 import { calendarModel } from "../../models/calendar/calendarModel";
 import mongoose from "mongoose";
+import { channel } from "diagnostics_channel";
+import { channelModel } from "../../models/channel/channelModel";
 
 // ----------------------------------------------------
 
@@ -58,16 +60,28 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
-    const data = await calendarModel
-      .find({ user: user.userId })
-      .sort({ user: -1 })
-      .limit(3);
-    res.status(200).json({
-      status: 200,
-      success: true,
-      message: "Events Data Fetched Successfully",
-      data,
-    });
+    const channel = await channelModel.findOne({ user: user.userId });
+
+    if (channel) {
+      const data = await calendarModel
+        .find({ channelId: channel.channelId })
+        .sort({ _id: -1 })
+        .limit(3);
+      res.status(200).json({
+        status: 200,
+        success: true,
+        message: "Events Data Fetched Successfully",
+        data,
+      });
+    } else {
+      res.status(404).json({
+        status: 404,
+        success: true,
+        message: "No Event Data Found",
+        data: [],
+      });
+    }
+
     return;
   } else {
     next(new CustomError("Invalid User", 4001));
@@ -109,14 +123,14 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
               item.start?.dateTime &&
               item.end?.dateTime &&
               item.created &&
-              mongoose.Types.ObjectId.isValid(String(user))
+              channelId
             )
               data.push({
                 eventName: item.summary,
                 startDate: item.start?.dateTime,
                 endDate: item.end?.dateTime,
                 createdAt: item.created,
-                user,
+                channelId: String(channelId),
               });
           });
           if (data && data.length) {

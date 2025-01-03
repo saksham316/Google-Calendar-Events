@@ -4,7 +4,7 @@ declare global {
     startDate: string;
     endDate: string;
     createdAt: string;
-    user: string;
+    channelId: string;
   }
 }
 export {};

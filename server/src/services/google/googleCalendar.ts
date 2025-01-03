@@ -48,7 +48,7 @@ export const fetchEvents = async (auth: typeof googleOAuthClient) => {
 
     const response = await calendar.events.list({
       calendarId: "primary",
-      maxResults: 5,
+      maxResults: 3,
       timeMin: new Date().toISOString(),
       auth,
     });
