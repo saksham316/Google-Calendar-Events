@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { googleOAuthClient } from "../../config/google/googleConfig";
+import moment from "moment";
 
 // createEvent - service to create the event in the google calendar
 export const createEvent = async (
@@ -50,7 +51,7 @@ export const fetchEvents = async (auth: typeof googleOAuthClient) => {
       calendarId: "primary",
       maxResults: 10,
       auth,
-      timeMin: new Date().toISOString(),
+      timeMin: moment().subtract(5, "hours").toISOString(),
     });
     return response;
   } catch (error) {
