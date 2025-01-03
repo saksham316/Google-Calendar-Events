@@ -21,7 +21,7 @@ export const createCalendarEvent = createAsyncThunk(
 // fetchCalendarEvents
 export const fetchCalendarEvents = createAsyncThunk<
   IFetchCalendarEventApiRes,
-  { query?: string }
+  { query?: string } | void
 >("calendarEvent/fetchCalendarEvents", async (payload, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.get(
