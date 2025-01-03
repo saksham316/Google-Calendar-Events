@@ -86,7 +86,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     next(new CustomError("Unauthorized request", 401));
     return;
   } else {
-    const user = customToken;
+    const user = String(customToken);
     if (user) {
       const userData = await authModel.findById(user);
       if (userData && Object.keys(userData)) {
@@ -108,14 +108,15 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
               item.summary &&
               item.start?.dateTime &&
               item.end?.dateTime &&
-              item.created
+              item.created &&
+              mongoose.Types.ObjectId.isValid(String(user))
             )
               data.push({
                 eventName: item.summary,
                 startDate: item.start?.dateTime,
                 endDate: item.end?.dateTime,
                 createdAt: item.created,
-                user: customToken,
+                user,
               });
           });
           if (data && data.length) {
