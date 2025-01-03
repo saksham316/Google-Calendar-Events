@@ -101,14 +101,20 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
       const eventRes = await fetchEvents(googleOAuthClient);
       if (eventRes.status === 200 && eventRes.statusText === "OK") {
         if (eventRes.data && eventRes.data.items) {
-          let data = eventRes.data.items.map((item) => {
-            return {
-              eventName: item.summary,
-              startDate: item.start?.dateTime,
-              endDate: item.end?.dateTime,
-              createdAt: item.created,
-              user: customToken,
-            };
+          let data = eventRes.data.items.filter((item) => {
+            if (
+              item.summary &&
+              item.start?.dateTime &&
+              item.end?.dateTime &&
+              item.created
+            )
+              return {
+                eventName: item.summary,
+                startDate: item.start?.dateTime,
+                endDate: item.end?.dateTime,
+                createdAt: item.created,
+                user: customToken,
+              };
           });
           if (data && data.length) {
             console.log("data", data);
@@ -119,7 +125,7 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
         res.status(200).json({
           status: 200,
           success: true,
-          message: "Event Fetched Successfully",
+          message: "Events Fetched Successfully",
         });
         return;
       }
