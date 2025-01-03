@@ -24,6 +24,7 @@ export const fetchCalendarEvents = createAsyncThunk<
   { query?: string } | void
 >("calendarEvent/fetchCalendarEvents", async (payload, { rejectWithValue }) => {
   try {
+    console.log("payload", payload);
     const res = await axiosInstance.get(
       `/calendar/events${payload && payload.query ? `?${payload.query}` : ""}`,
       {

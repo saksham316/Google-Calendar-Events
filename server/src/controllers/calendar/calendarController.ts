@@ -73,7 +73,12 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
           access_token: userData.g_access_token,
           refresh_token: userData.g_refresh_token,
         });
-
+        console.log(
+          "momentntnsndan",
+          moment(userData.presentUpdatedTime).isAfter(
+            moment(userData.lastUpdatedTime)
+          )
+        );
         // checking whether there is any update in events or not
         if (
           sync ||
@@ -90,6 +95,7 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
           });
 
           const eventRes = await fetchEvents(googleOAuthClient);
+          console.log("eventRes", eventRes.data);
           if (eventRes.status === 200 && eventRes.statusText === "OK") {
             if (eventRes.data && eventRes.data.items) {
               let data: Array<ICalendarCreationData> = [];
