@@ -6,6 +6,7 @@ import { googleOAuthClient } from "../../config/google/googleConfig";
 import { authModel } from "../../models/auth/authModel";
 import { fetchEvents } from "../../services/google/googleCalendar";
 import { calendarModel } from "../../models/calendar/calendarModel";
+import mongoose from "mongoose";
 
 // ----------------------------------------------------
 
@@ -59,7 +60,7 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
     const user = req.user as IJwtPayload;
     const data = await calendarModel
       .find({ user: user.userId })
-      .sort({ createdAt: -1 })
+      .sort({ user: -1 })
       .limit(3);
     res.status(200).json({
       status: 200,
@@ -118,7 +119,14 @@ export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
               });
           });
           if (data && data.length) {
-            await calendarModel.insertMany(data);
+            try {
+              await calendarModel.deleteMany({});
+              await calendarModel.insertMany(data);
+            } catch (error) {
+              console.log(
+                "Error! Transaction Failed to Insert Calendar Events"
+              );
+            }
           }
         }
 
