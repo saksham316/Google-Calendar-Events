@@ -45,14 +45,12 @@ export const fetchEvents = async (auth: typeof googleOAuthClient) => {
       version: "v3",
       auth: auth,
     });
-    const now = new Date();
-    const pastOneHour = new Date(now.getTime() - 60 * 60 * 1000);
 
     const response = await calendar.events.list({
       calendarId: "primary",
-      maxResults: 3,
+      maxResults: 10,
       auth,
-      timeMin: pastOneHour.toISOString(),
+      timeMin: new Date().toISOString(),
     });
     return response;
   } catch (error) {
