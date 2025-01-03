@@ -80,7 +80,7 @@ export const googleLogin = asyncErrorHandler(async (req, res, next) => {
       // custom token for validating the notification channel request
       const customToken = createJwtToken(
         { userId },
-        process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN,
+        process.env.GOOGLE_NOTIFICATION_CHANNEL_SECRET,
         "30d"
       );
       // channel id must be unique

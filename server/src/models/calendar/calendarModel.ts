@@ -17,9 +17,9 @@ const calendarSchema = new mongoose.Schema({
   createdAt: {
     type: String,
   },
-  channelId: {
-    type: String,
-    required: [true, "Channel Id is a required field"],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "auth",
   },
 });
 

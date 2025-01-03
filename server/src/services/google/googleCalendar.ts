@@ -51,6 +51,7 @@ export const fetchEvents = async (auth: typeof googleOAuthClient) => {
       maxResults: 3,
       timeMin: new Date().toISOString(),
       auth,
+      orderBy: "created",
     });
     return response;
   } catch (error) {
@@ -78,7 +79,7 @@ export const watchEvents = async (
         id,
         type: "web_hook",
         address: webHookUrl,
-        ...(customToken && { token: customToken }),
+        token: customToken,
       },
     });
     return response;

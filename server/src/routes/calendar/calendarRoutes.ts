@@ -6,6 +6,7 @@ import {
   watchCalendarEvents,
 } from "../../controllers/calendar/calendarController";
 import { verifyToken } from "../../middlewares/auth/verifyToken";
+import { verifyGoogleToken } from "../../middlewares/google/verifyGoogleToken";
 
 // ----------------------------------------
 const calendarRouter = Router();
@@ -17,7 +18,9 @@ calendarRouter
   .get(verifyToken, fetchCalendarEvents);
 
 // calendar/watch-events
-calendarRouter.route("/watch-events").post(watchCalendarEvents);
+calendarRouter
+  .route("/watch-events")
+  .post(verifyGoogleToken, watchCalendarEvents);
 
 // ----------------------------------------
 export { calendarRouter };

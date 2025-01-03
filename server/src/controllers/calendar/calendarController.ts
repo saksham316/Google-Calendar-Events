@@ -63,33 +63,33 @@ export const createCalendarEvent = asyncErrorHandler(async (req, res, next) => {
 export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
   if (req.user) {
     const user = req.user as IJwtPayload;
-    console.log("jwt payload", req.user);
-    const channel = await channelModel.findOne({ user: user.userId });
+    console.log("jwt payload fetch calendar", req.user);
+    const userData = await calendarModel.findOne({ user: user.userId });
     console.log("channel data", channel);
 
-    if (channel) {
-      const data = await calendarModel
-        .find({ channelId: channel.channelId })
-        .sort({ _id: -1 })
-        .limit(3);
-      res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Events Data Fetched Successfully",
-        data,
-      });
+    if (userData && Object.keys(userData).length) {
+      const data = await calendarModel.find({ user: user.userId }).limit(3);
+      if (data && data.length) {
+        res.status(200).json({
+          status: 200,
+          success: true,
+          message: "Events Data Fetched Successfully",
+          data,
+        });
+      } else {
+        res.status(404).json({
+          status: 404,
+          success: true,
+          message: "No Event Data Found",
+          data: [],
+        });
+        return;
+      }
     } else {
-      res.status(404).json({
-        status: 404,
-        success: true,
-        message: "No Event Data Found",
-        data: [],
-      });
+      next(new CustomError("Invalid User", 401));
     }
-
-    return;
   } else {
-    next(new CustomError("Invalid User", 4001));
+    next(new CustomError("Invalid User", 401));
   }
 });
 
@@ -97,80 +97,56 @@ export const fetchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
 // @method - POST
 // @url - /calendar/watch-events
 export const watchCalendarEvents = asyncErrorHandler(async (req, res, next) => {
-  const customToken = req.headers["x-goog-channel-token"];
-  const resourceId = req.headers["x-goog-resource-id"];
-  const channelId = req.headers["x-goog-channel-id"];
-
-  if (!customToken && !resourceId && !channelId) {
-    next(new CustomError("Unauthorized request", 401));
-    return;
-  } else {
-    let user = "";
-    if (customToken && process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN) {
-      const payload = verifyJwtToken(
-        String(customToken),
-        process.env.GOOGLE_NOTIFICATION_CHANNEL_TOKEN
-      );
-      if (payload) {
-        user = payload.userId;
-      }
+  if (req.user) {
+    const user = req.user as IJwtPayload;
+    const userData = await authModel.findById(user.userId);
+    console.log("this is userdata watch calendar", user);
+    console.log("this is userdata", userData);
+    if (userData && Object.keys(userData)) {
+      googleOAuthClient.setCredentials({
+        access_token: userData.g_access_token,
+        refresh_token: userData.g_refresh_token,
+      });
     } else {
-      next(new CustomError("Invalid Token", 403));
+      next(new CustomError("Unauthorized User", 401));
       return;
     }
-    if (user) {
-      const userData = await authModel.findById(user);
-      console.log("this is userdata", user);
-      console.log("this is userdata", userData);
-      if (userData && Object.keys(userData)) {
-        googleOAuthClient.setCredentials({
-          access_token: userData.g_access_token,
-          refresh_token: userData.g_refresh_token,
+    //
+    const eventRes = await fetchEvents(googleOAuthClient);
+    if (eventRes.status === 200 && eventRes.statusText === "OK") {
+      if (eventRes.data && eventRes.data.items) {
+        let data: Array<ICalendarCreationData> = [];
+        eventRes.data.items.forEach((item) => {
+          if (
+            item.summary &&
+            item.start?.dateTime &&
+            item.end?.dateTime &&
+            item.created
+          )
+            data.push({
+              eventName: item.summary,
+              startDate: item.start?.dateTime,
+              endDate: item.end?.dateTime,
+              createdAt: item.created,
+              user: user.userId,
+            });
         });
-      } else {
-        next(new CustomError("Unauthorized User", 401));
-        return;
-      }
-      //
-      const eventRes = await fetchEvents(googleOAuthClient);
-      if (eventRes.status === 200 && eventRes.statusText === "OK") {
-        if (eventRes.data && eventRes.data.items) {
-          let data: Array<ICalendarCreationData> = [];
-          eventRes.data.items.forEach((item) => {
-            if (
-              item.summary &&
-              item.start?.dateTime &&
-              item.end?.dateTime &&
-              item.created &&
-              channelId
-            )
-              data.push({
-                eventName: item.summary,
-                startDate: item.start?.dateTime,
-                endDate: item.end?.dateTime,
-                createdAt: item.created,
-                channelId: String(channelId),
-              });
-          });
-          if (data && data.length) {
-            try {
-              await calendarModel.deleteMany({});
-              await calendarModel.insertMany(data);
-            } catch (error) {
-              console.log(
-                "Error! Transaction Failed to Insert Calendar Events"
-              );
-            }
+        if (data && data.length) {
+          try {
+            await calendarModel.deleteMany({});
+            await calendarModel.insertMany(data);
+          } catch (error) {
+            console.log("Error! Transaction Failed to Insert Calendar Events");
           }
         }
-
-        res.status(200).json({
-          status: 200,
-          success: true,
-          message: "Events Fetched Successfully",
-        });
-        return;
       }
+
+      res.status(200).json({
+        status: 200,
+        success: true,
+        message: "Events Fetched Successfully",
+      });
+      return;
     }
   }
 });
